@@ -1,4 +1,4 @@
-import { FaHome, FaUsers, FaSignOutAlt, FaHandsHelping } from "react-icons/fa";
+import { FaHome, FaSignOutAlt,  } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 
 export const dashboardConfig = {
@@ -15,14 +15,14 @@ export const dashboardConfig = {
       sublabels: [],
     },
 
-    { label: "Users", icon: FaUsers, path: "/dashboard/user-page", sublabels: [] },
+    // { label: "Users", icon: FaUsers, path: "/dashboard/user-page", sublabels: [] },
 
-    {
-      label: "Help",
-      icon: FaHandsHelping,
-      path: "/dashboard/help",
-      sublabels: [],
-    },
+    // {
+    //   label: "Help",
+    //   icon: FaHandsHelping,
+    //   path: "/dashboard/help",
+    //   sublabels: [],
+    // },
     {
       label: "Logout",
       icon: FaSignOutAlt,

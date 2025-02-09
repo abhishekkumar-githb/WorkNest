@@ -5,10 +5,10 @@ import Dashboard from "./Pages/Dashboard";
 import Home from "./Pages/Home/HomePage";
 import ProjectManagementPage from "./Pages/AdminAccess/ProjectManagementPage";
 // import UsersPage from "./Pages/Users/UsersPage";
-import HelpPage from "./Pages/Help/HelpPage";
+// import HelpPage from "./Pages/Help/HelpPage";
 import LogoutPage from "./Pages/Logout/LogoutPage";
 import LoginPage from "./Pages/Login/LoginPage";
-import UserPage from "./Pages/Users/UserPage";
+// import UserPage from "./Pages/Users/UserPage";
 
 const App = () => {
   return (
@@ -34,8 +34,8 @@ const App = () => {
           <Route index element={<Home />} />
 
           <Route path="/dashboard/project-management" element={<ProjectManagementPage />} />
-          <Route path="/dashboard/user-page" element={<UserPage />} />
-          <Route path="/dashboard/help" element={<HelpPage />} />
+          {/* <Route path="/dashboard/user-page" element={<UserPage />} />
+          <Route path="/dashboard/help" element={<HelpPage />} /> */}
         </Route>
       </Routes>
     </>
