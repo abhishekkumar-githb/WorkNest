@@ -1,12 +1,13 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unescaped-entities */
 import { useState, useEffect } from "react";
-import { BsPeopleFill, BsPersonDashFill, BsPencilFill } from "react-icons/bs";
+import { BsPeopleFill, BsPersonDashFill, BsPencilFill, BsToggleOn, BsToggleOff } from "react-icons/bs";
 import { workerConfig } from "./userConfig.js";
 
 const UsersPage = () => {
   const [workers, setWorkers] = useState(workerConfig.initialWorkers);
-  const [newWorker, setNewWorker] = useState(workerConfig.defaultWorker);
+  const [newWorker, setNewWorker] = useState({
+    ...workerConfig.defaultWorker,
+    status: 'Active' // Set default status
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingWorker, setEditingWorker] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -14,7 +15,10 @@ const UsersPage = () => {
   const handleAddWorker = () => {
     if (newWorker.name && newWorker.role) {
       setWorkers([...workers, { ...newWorker, id: workers.length + 1 }]);
-      setNewWorker(workerConfig.defaultWorker);
+      setNewWorker({
+        ...workerConfig.defaultWorker,
+        status: 'Active'
+      });
       setIsModalOpen(false);
     }
   };
@@ -31,11 +35,26 @@ const UsersPage = () => {
       setWorkers(
         workers.map((w) => (w.id === editingWorker.id ? newWorker : w))
       );
-      setNewWorker(workerConfig.defaultWorker);
+      setNewWorker({
+        ...workerConfig.defaultWorker,
+        status: 'Active'
+      });
       setIsModalOpen(false);
       setIsEditMode(false);
       setEditingWorker(null);
     }
+  };
+
+  const handleToggleStatus = (workerId) => {
+    setWorkers(workers.map(worker => {
+      if (worker.id === workerId) {
+        return {
+          ...worker,
+          status: worker.status === 'Active' ? 'Inactive' : 'Active'
+        };
+      }
+      return worker;
+    }));
   };
 
   const handleRemoveWorker = (id) => {
@@ -46,13 +65,18 @@ const UsersPage = () => {
     setIsModalOpen(false);
     setIsEditMode(false);
     setEditingWorker(null);
-    setNewWorker(workerConfig.defaultWorker);
+    setNewWorker({
+      ...workerConfig.defaultWorker,
+      status: 'Active'
+    });
   };
 
   return (
     <div className="min-h-screen bg-[#0f172a]">
       <div className="flex flex-col">
+        {/* Main Content */}
         <div className="flex-1 p-4 md:p-8">
+          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
             {workerConfig.stats.map((stat, index) => (
               <div key={index} className="bg-[#1e293b] rounded-lg p-4 md:p-6">
@@ -70,10 +94,12 @@ const UsersPage = () => {
               </div>
             ))}
           </div>
+
+          {/* Workers Management Section */}
           <div className="bg-[#1e293b] rounded-lg overflow-hidden">
             <div className="p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <h2 className="text-xl font-bold text-white">
-                Worker's Data
+                Workers Management
               </h2>
               <button
                 onClick={() => setIsModalOpen(true)}
@@ -90,63 +116,54 @@ const UsersPage = () => {
                     <thead className="bg-[#2d3a4f]">
                       <tr>
                         <th className="p-4 text-left text-gray-400">Name</th>
-                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">
-                          Role
-                        </th>
-                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">
-                          Status
-                        </th>
-                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">
-                          Join Date
-                        </th>
-                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">
-                          Projects
-                        </th>
-                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">
-                          Earnings
-                        </th>
+                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">Role</th>
+                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">Status</th>
+                        <th className="p-4 text-left text-gray-400 hidden md:table-cell">Join Date</th>
                         <th className="p-4 text-left text-gray-400">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {workers.map((worker) => (
-                        <tr
-                          key={worker.id}
-                          className="border-t border-[#2d3a4f]"
-                        >
+                        <tr key={worker.id} className="border-t border-[#2d3a4f]">
                           <td className="p-4 text-white">
                             <div className="flex flex-col md:flex-row">
                               <span>{worker.name}</span>
                               <div className="md:hidden mt-2">
-                                <div className="text-sm text-gray-400">
-                                  {worker.role}
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                  {worker.joinDate}
-                                </div>
-                                <div className="text-sm text-gray-400">
-                                  ${worker.earnings}
+                                <div className="text-sm text-gray-400">{worker.role}</div>
+                                <div className="text-sm text-gray-400">{worker.joinDate}</div>
+                                <div className="text-sm">
+                                  <span className={`px-3 py-1 rounded-full text-xs ${
+                                    worker.status === 'Active' 
+                                      ? 'bg-green-500/20 text-green-400' 
+                                      : 'bg-red-500/20 text-red-400'
+                                  }`}>
+                                    {worker.status}
+                                  </span>
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td className="p-4 text-white hidden md:table-cell">
-                            {worker.role}
-                          </td>
+                          <td className="p-4 text-white hidden md:table-cell">{worker.role}</td>
                           <td className="p-4 hidden md:table-cell">
-                            <span className="px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
-                              {worker.status}
-                            </span>
+                            <button
+                              onClick={() => handleToggleStatus(worker.id)}
+                              className="flex items-center gap-2"
+                            >
+                              <span className={`px-3 py-1 rounded-full text-xs ${
+                                worker.status === 'Active' 
+                                  ? 'bg-green-500/20 text-green-400' 
+                                  : 'bg-red-500/20 text-red-400'
+                              }`}>
+                                {worker.status}
+                              </span>
+                              {worker.status === 'Active' ? (
+                                <BsToggleOn className="w-6 h-6 text-green-400" />
+                              ) : (
+                                <BsToggleOff className="w-6 h-6 text-red-400" />
+                              )}
+                            </button>
                           </td>
-                          <td className="p-4 text-white hidden md:table-cell">
-                            {worker.joinDate}
-                          </td>
-                          <td className="p-4 text-white hidden md:table-cell">
-                            {worker.projectsCompleted}
-                          </td>
-                          <td className="p-4 text-white hidden md:table-cell">
-                            {worker.earnings}
-                          </td>
+                          <td className="p-4 text-white hidden md:table-cell">{worker.joinDate}</td>
                           <td className="p-4">
                             <div className="flex gap-2">
                               <button
@@ -174,6 +191,7 @@ const UsersPage = () => {
         </div>
       </div>
 
+      {/* Add/Edit Worker Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-[#1e293b] p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -223,33 +241,17 @@ const UsersPage = () => {
                 />
               </div>
               <div>
-                <label className="block text-gray-400 mb-1">
-                  Projects Completed
-                </label>
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={newWorker.projectsCompleted}
+                <label className="block text-gray-400 mb-1">Status</label>
+                <select
+                  value={newWorker.status}
                   onChange={(e) =>
-                    setNewWorker({
-                      ...newWorker,
-                      projectsCompleted: parseInt(e.target.value),
-                    })
+                    setNewWorker({ ...newWorker, status: e.target.value })
                   }
                   className="w-full p-2 bg-[#2d3a4f] rounded-lg text-white border border-[#4a5568]"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-400 mb-1">Earnings</label>
-                <input
-                  type="text"
-                  placeholder="$0"
-                  value={newWorker.earnings}
-                  onChange={(e) =>
-                    setNewWorker({ ...newWorker, earnings: e.target.value })
-                  }
-                  className="w-full p-2 bg-[#2d3a4f] rounded-lg text-white border border-[#4a5568]"
-                />
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
               </div>
               <div className="flex gap-4 mt-6">
                 <button
