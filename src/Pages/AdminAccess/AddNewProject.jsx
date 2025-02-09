@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { uiConfig } from "./projectManagementConfig";
 
@@ -35,7 +33,6 @@ const AddNewProject = ({ onClose, onSave }) => {
     "DevOps Engineer",
   ];
 
-  // ... (keeping all the calculation and handler functions the same)
   const calculateTotalSpent = () => {
     return projectForm.workers.reduce(
       (total, worker) => total + Number(worker.paidAmount),
@@ -128,16 +125,16 @@ const AddNewProject = ({ onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
-      <div className="bg-slate-800 rounded-lg p-3 md:p-6 w-full max-w-4xl my-2 md:my-4 h-[calc(100vh-2rem)] md:h-auto overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
+      <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl p-3 md:p-6 w-full max-w-4xl my-2 md:my-4 h-[calc(100vh-2rem)] md:h-auto overflow-y-auto shadow-xl border border-slate-700/50">
         {/* Header */}
-        <div className="sticky top-0 bg-slate-800 z-10 flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
-          <h3 className="text-lg md:text-xl font-bold text-white">
-            Project Details
+        <div className="sticky top-0 bg-gradient-to-b from-slate-800 to-slate-800/95 backdrop-blur-sm z-10 flex justify-between items-center mb-6 pb-4 border-b border-slate-700/50">
+          <h3 className="text-xl md:text-2xl font-bold text-white bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">
+            New Project
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors p-2"
+            className="text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all p-2 rounded-lg"
           >
             <svg
               className="w-5 h-5"
@@ -156,16 +153,16 @@ const AddNewProject = ({ onClose, onSave }) => {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500 bg-opacity-20 text-red-400 rounded-lg text-sm">
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm backdrop-blur-sm animate-fade-in">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
           {/* Project Details Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-2">
-              <label className="block text-slate-300 text-sm md:text-base">
+              <label className="block text-slate-300 text-sm font-medium">
                 Project Name
               </label>
               <input
@@ -174,13 +171,14 @@ const AddNewProject = ({ onClose, onSave }) => {
                 onChange={(e) =>
                   setProjectForm({ ...projectForm, name: e.target.value })
                 }
-                className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm md:text-base"
+                className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                 required
+                placeholder="Enter project name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-slate-300 text-sm md:text-base">
+              <label className="block text-slate-300 text-sm font-medium">
                 Total Budget
               </label>
               <input
@@ -192,14 +190,15 @@ const AddNewProject = ({ onClose, onSave }) => {
                     totalBudget: e.target.value,
                   })
                 }
-                className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm md:text-base"
+                className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                 required
                 min="0"
+                placeholder="Enter budget amount"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-slate-300 text-sm md:text-base">
+              <label className="block text-slate-300 text-sm font-medium">
                 Start Date
               </label>
               <input
@@ -208,13 +207,13 @@ const AddNewProject = ({ onClose, onSave }) => {
                 onChange={(e) =>
                   setProjectForm({ ...projectForm, startDate: e.target.value })
                 }
-                className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm md:text-base"
+                className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-slate-300 text-sm md:text-base">
+              <label className="block text-slate-300 text-sm font-medium">
                 End Date
               </label>
               <input
@@ -223,79 +222,82 @@ const AddNewProject = ({ onClose, onSave }) => {
                 onChange={(e) =>
                   setProjectForm({ ...projectForm, endDate: e.target.value })
                 }
-                className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm md:text-base"
+                className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all"
                 required
               />
             </div>
           </div>
 
           {/* Workers Section */}
-          <div className="border-t border-slate-700 pt-4 md:pt-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
-              <h4 className="text-lg font-semibold text-white">Workers</h4>
+          <div className="border-t border-slate-700/50 pt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <h4 className="text-lg font-semibold text-white bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">Project Team</h4>
               <button
                 type="button"
                 onClick={() => setShowWorkerForm(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors text-sm md:text-base"
+                className="w-full sm:w-auto px-6 py-2.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-all text-sm font-medium shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 focus:ring-2 focus:ring-violet-600/50"
               >
-                Add Worker
+                Add Team Member
               </button>
             </div>
 
             {/* Worker Form */}
             {showWorkerForm && (
-              <div className="mb-6 p-3 md:p-4 border border-slate-700 rounded-lg">
-                <h5 className="text-md font-semibold text-white mb-4">
-                  New Worker Details
+              <div className="mb-8 p-4 md:p-6 border border-slate-700/50 rounded-xl bg-slate-800/50 backdrop-blur-sm">
+                <h5 className="text-lg font-semibold text-white mb-6">
+                  New Team Member
                 </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">Name</label>
+                    <label className="block text-slate-300 text-sm font-medium">Name</label>
                     <input
                       type="text"
                       value={workerForm.name}
                       onChange={(e) =>
                         setWorkerForm({ ...workerForm, name: e.target.value })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                       required
+                      placeholder="Enter name"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">Phone</label>
+                    <label className="block text-slate-300 text-sm font-medium">Phone</label>
                     <input
                       type="tel"
                       value={workerForm.phone}
                       onChange={(e) =>
                         setWorkerForm({ ...workerForm, phone: e.target.value })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                       required
+                      placeholder="Enter phone number"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">Email</label>
+                    <label className="block text-slate-300 text-sm font-medium">Email</label>
                     <input
                       type="email"
                       value={workerForm.email}
                       onChange={(e) =>
                         setWorkerForm({ ...workerForm, email: e.target.value })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                       required
+                      placeholder="Enter email address"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">Role</label>
+                    <label className="block text-slate-300 text-sm font-medium">Role</label>
                     <select
                       value={workerForm.role}
                       onChange={(e) =>
                         setWorkerForm({ ...workerForm, role: e.target.value })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all"
                       required
                     >
                       <option value="">Select Role</option>
@@ -308,7 +310,7 @@ const AddNewProject = ({ onClose, onSave }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">
+                    <label className="block text-slate-300 text-sm font-medium">
                       Total Amount
                     </label>
                     <input
@@ -320,14 +322,15 @@ const AddNewProject = ({ onClose, onSave }) => {
                           totalAmount: e.target.value,
                         })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                       required
                       min="0"
+                      placeholder="Enter total amount"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">
+                    <label className="block text-slate-300 text-sm font-medium">
                       Paid Amount
                     </label>
                     <input
@@ -339,14 +342,15 @@ const AddNewProject = ({ onClose, onSave }) => {
                           paidAmount: e.target.value,
                         })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all placeholder:text-slate-500"
                       required
                       min="0"
+                      placeholder="Enter paid amount"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-slate-300 text-sm">
+                    <label className="block text-slate-300 text-sm font-medium">
                       Last Payment Date
                     </label>
                     <input
@@ -358,24 +362,25 @@ const AddNewProject = ({ onClose, onSave }) => {
                           lastPaymentDate: e.target.value,
                         })
                       }
-                      className="w-full bg-slate-700 rounded-lg p-2.5 text-white border border-slate-600 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none text-sm"
+                      className="w-full bg-slate-800/50 rounded-lg p-3 text-white border border-slate-600/50 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none text-sm transition-all"
                       required
                     />
                   </div>
 
-                  <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-2 mt-4">
+                  <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-3 mt-4">
                     <button
                       type="button"
                       onClick={() => setShowWorkerForm(false)}
-                      className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm"
+                      className="w-full sm:w-auto px-6 py-2.5 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-all text-sm font-medium"
                     >
                       Cancel
                     </button>
                     <button
                       type="button"
                       onClick={handleAddWorker}
-                      className="w-full sm:w-auto px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors text-sm"
-                    >Save Worker
+                      className="w-full sm:w-auto px-6 py-2.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-all text-sm font-medium shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 focus:ring-2 focus:ring-violet-600/50"
+                    >
+                      Add Member
                     </button>
                   </div>
                 </div>
@@ -383,36 +388,40 @@ const AddNewProject = ({ onClose, onSave }) => {
             )}
 
             {/* Workers List */}
-            <div className="space-y-3 md:space-y-4">
+            <div className="space-y-4">
               {projectForm.workers.map((worker) => (
-                <div key={worker.id} className="bg-slate-700 p-3 md:p-4 rounded-lg">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                <div key={worker.id} className="bg-slate-800/50 p-4 md:p-6 rounded-xl border border-slate-700/50 hover:border-slate-600/50 transition-all group">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     <div className="space-y-1">
-                      <p className="text-slate-400 text-xs md:text-sm">Name</p>
-                      <p className="text-white text-sm md:text-base">{worker.name}</p>
+                      <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Name</p>
+                      <p className="text-white text-sm md:text-base font-medium">{worker.name}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-slate-400 text-xs md:text-sm">Role</p>
-                      <p className="text-white text-sm md:text-base">{worker.role}</p>
+                      <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Role</p>
+                      <p className="text-white text-sm md:text-base">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                          {worker.role}
+                        </span>
+                      </p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-slate-400 text-xs md:text-sm">Contact</p>
+                      <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Contact</p>
                       <p className="text-white text-sm md:text-base">{worker.phone}</p>
-                      <p className="text-slate-400 text-xs md:text-sm break-all">{worker.email}</p>
+                      <p className="text-slate-400 text-xs md:text-sm break-all group-hover:text-violet-400 transition-colors">{worker.email}</p>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-slate-400 text-xs md:text-sm">Payment Details</p>
+                    <div className="space-y-2">
+                      <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Payment Details</p>
                       <div className="grid grid-cols-2 sm:grid-cols-1 gap-2">
-                        <p className="text-white text-sm md:text-base">
+                        <p className="text-white text-sm md:text-base font-medium">
                           Total: ₹{worker.totalAmount.toLocaleString()}
                         </p>
-                        <p className="text-green-400 text-sm md:text-base">
+                        <p className="text-emerald-400 text-sm md:text-base">
                           Paid: ₹{worker.paidAmount.toLocaleString()}
                         </p>
-                        <p className="text-orange-400 text-sm md:text-base">
+                        <p className="text-amber-400 text-sm md:text-base">
                           Remaining: ₹{worker.remainingAmount.toLocaleString()}
                         </p>
-                        <p className="text-slate-400 text-xs md:text-sm">
+                        <p className="text-slate-400 text-xs">
                           Last Paid: {new Date(worker.lastPaymentDate).toLocaleDateString()}
                         </p>
                       </div>
@@ -424,41 +433,41 @@ const AddNewProject = ({ onClose, onSave }) => {
           </div>
 
           {/* Summary Section */}
-          <div className="border-t border-slate-700 pt-4 md:pt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
-              <div className="bg-slate-700 p-3 md:p-4 rounded-lg">
-                <p className="text-slate-400 text-xs md:text-sm">Total Budget</p>
-                <p className="text-white text-base md:text-lg">
+          <div className="border-t border-slate-700/50 pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
+              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Total Budget</p>
+                <p className="text-white text-lg md:text-xl font-semibold">
                   ₹{Number(projectForm.totalBudget || 0).toLocaleString()}
                 </p>
               </div>
-              <div className="bg-slate-700 p-3 md:p-4 rounded-lg">
-                <p className="text-slate-400 text-xs md:text-sm">Total Spent</p>
-                <p className="text-green-400 text-base md:text-lg">
+              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Total Spent</p>
+                <p className="text-emerald-400 text-lg md:text-xl font-semibold">
                   ₹{calculateTotalSpent().toLocaleString()}
                 </p>
               </div>
-              <div className="bg-slate-700 p-3 md:p-4 rounded-lg">
-                <p className="text-slate-400 text-xs md:text-sm">Remaining Budget</p>
-                <p className="text-orange-400 text-base md:text-lg">
+              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Remaining Budget</p>
+                <p className="text-amber-400 text-lg md:text-xl font-semibold">
                   ₹{calculateRemainingBudget().toLocaleString()}
                 </p>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="sticky bottom-0 bg-slate-800 pt-2 pb-2 -mx-3 px-3 md:-mx-6 md:px-6 border-t border-slate-700">
-              <div className="flex flex-col sm:flex-row justify-end gap-2">
+            <div className="sticky bottom-0 bg-gradient-to-t from-slate-900 to-slate-900/95 backdrop-blur-sm pt-4 -mx-3 px-3 md:-mx-6 md:px-6 border-t border-slate-700/50">
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pb-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full sm:w-auto px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm md:text-base"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-all text-sm font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors text-sm md:text-base"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-all text-sm font-medium shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 focus:ring-2 focus:ring-violet-600/50"
                 >
                   Create Project
                 </button>
