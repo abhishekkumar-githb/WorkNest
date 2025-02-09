@@ -3,6 +3,7 @@
 // ProjectManagementPage.jsx
 import { useState, useEffect } from "react";
 import { projectApi, uiConfig } from "./projectManagementConfig.js";
+import AddNewProject from "./AddNewProject";
 
 const ProjectManagementPage = () => {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -13,6 +14,7 @@ const ProjectManagementPage = () => {
   const [editingWorker, setEditingWorker] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState([]);
+  const [showAddProject, setShowAddProject] = useState(false);
 
   // Form states
   const [workerForm, setWorkerForm] = useState({
@@ -62,10 +64,32 @@ const ProjectManagementPage = () => {
     }
   };
 
+  const handleSaveProject = async (newProject) => {
+    try {
+      setLoading(true);
+      const savedProject = await projectApi.addProject(newProject);
+
+      // Update the projects list to include the new project
+      setProjects((prevProjects) => [...prevProjects, savedProject]);
+      setError(null);
+    } catch (err) {
+      setError("Failed to create project");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleProjectClick = async (projectId) => {
     try {
       setLoading(true);
-      const projectData = await projectApi.getProjectById(projectId);
+      const projectData = projects.find(
+        (p) => String(p.id) === String(projectId)
+      );
+
+      if (!projectData) {
+        throw new Error("Project not found");
+      }
       setSelectedProject(projectData);
       setError(null);
     } catch (err) {
@@ -158,10 +182,12 @@ const ProjectManagementPage = () => {
     <div
       onClick={() => handleProjectClick(project.id)}
       className="bg-slate-800 rounded-lg border border-slate-700 p-4 md:p-6 cursor-pointer 
-                 hover:border-violet-500 transition-colors duration-300"
+               hover:border-violet-500 transition-colors duration-300"
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
-        <h3 className="text-base md:text-lg font-semibold text-white">{project.name}</h3>
+        <h3 className="text-base md:text-lg font-semibold text-white">
+          {project.name}
+        </h3>
         <span
           className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm w-fit ${
             project.status === uiConfig.statuses.active
@@ -223,30 +249,48 @@ const ProjectManagementPage = () => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 md:p-4 z-50 overflow-y-auto">
         <div className="bg-slate-800 rounded-lg p-4 md:p-6 w-full max-w-md my-4">
-          <h3 className="text-lg md:text-xl font-bold text-white mb-4">Update Payment</h3>
+          <h3 className="text-lg md:text-xl font-bold text-white mb-4">
+            Update Payment
+          </h3>
           <div className="space-y-4">
             <div className="bg-slate-700 p-3 md:p-4 rounded-lg">
               <div className="grid grid-cols-2 gap-3 md:gap-4 text-sm md:text-base">
                 <div>
-                  <p className="text-slate-400 text-xs md:text-sm">Worker Name</p>
+                  <p className="text-slate-400 text-xs md:text-sm">
+                    Worker Name
+                  </p>
                   <p className="text-white">{worker.name}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-xs md:text-sm">Total Amount</p>
-                  <p className="text-white">${worker.totalAmount.toLocaleString()}</p>
+                  <p className="text-slate-400 text-xs md:text-sm">
+                    Total Amount
+                  </p>
+                  <p className="text-white">
+                    ${worker.totalAmount.toLocaleString()}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-xs md:text-sm">Previously Paid</p>
-                  <p className="text-green-400">${worker.paidAmount.toLocaleString()}</p>
+                  <p className="text-slate-400 text-xs md:text-sm">
+                    Previously Paid
+                  </p>
+                  <p className="text-green-400">
+                    ${worker.paidAmount.toLocaleString()}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-xs md:text-sm">Pending Amount</p>
-                  <p className="text-yellow-400">${pendingAmount.toLocaleString()}</p>
+                  <p className="text-slate-400 text-xs md:text-sm">
+                    Pending Amount
+                  </p>
+                  <p className="text-yellow-400">
+                    ${pendingAmount.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </div>
             <div>
-              <label className="block text-slate-300 mb-1 text-sm md:text-base">Payment Amount</label>
+              <label className="block text-slate-300 mb-1 text-sm md:text-base">
+                Payment Amount
+              </label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="number"
@@ -275,7 +319,11 @@ const ProjectManagementPage = () => {
               <button
                 onClick={() => handlePaymentUpdate(worker.id, paymentAmount)}
                 className="w-full sm:w-auto px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
-                disabled={!paymentAmount || Number(paymentAmount) <= 0 || Number(paymentAmount) > pendingAmount}
+                disabled={
+                  !paymentAmount ||
+                  Number(paymentAmount) <= 0 ||
+                  Number(paymentAmount) > pendingAmount
+                }
               >
                 Confirm Payment
               </button>
@@ -291,7 +339,9 @@ const ProjectManagementPage = () => {
       <BackButton />
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-4 md:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
-          <h2 className="text-lg md:text-xl font-bold text-white">{project.name}</h2>
+          <h2 className="text-lg md:text-xl font-bold text-white">
+            {project.name}
+          </h2>
           <div className="flex items-center gap-4">
             <span
               className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm ${
@@ -331,18 +381,24 @@ const ProjectManagementPage = () => {
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div>
                 <p className="text-slate-400 text-sm">Start Date</p>
-                <p className="text-white">{new Date(project.startDate).toLocaleDateString()}</p>
+                <p className="text-white">
+                  {new Date(project.startDate).toLocaleDateString()}
+                </p>
               </div>
               <div>
                 <p className="text-slate-400 text-sm">End Date</p>
-                <p className="text-white">{new Date(project.endDate).toLocaleDateString()}</p>
+                <p className="text-white">
+                  {new Date(project.endDate).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
 
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
-              <h4 className="text-base md:text-lg font-semibold text-white">Team Members</h4>
+              <h4 className="text-base md:text-lg font-semibold text-white">
+                Team Members
+              </h4>
               <button
                 onClick={() => setShowWorkerModal(true)}
                 className="w-full sm:w-auto px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
@@ -384,17 +440,25 @@ const ProjectManagementPage = () => {
                         </button>
                       </div>
                       <p className="text-slate-400 text-sm">{worker.role}</p>
-                      <p className="text-slate-400 text-sm mt-2">{worker.email}</p>
+                      <p className="text-slate-400 text-sm mt-2">
+                        {worker.email}
+                      </p>
                       <p className="text-slate-400 text-sm">{worker.phone}</p>
                     </div>
                     <div className="text-left md:text-right space-y-1">
-                      <p className="text-white">Total: ${worker.totalAmount.toLocaleString()}</p>
-                      <p className="text-green-400">Paid: ${worker.paidAmount.toLocaleString()}</p>
+                      <p className="text-white">
+                        Total: ${worker.totalAmount.toLocaleString()}
+                      </p>
+                      <p className="text-green-400">
+                        Paid: ${worker.paidAmount.toLocaleString()}
+                      </p>
                       <p className="text-yellow-400">
-                        Pending: ${calculatePendingAmount(worker).toLocaleString()}
+                        Pending: $
+                        {calculatePendingAmount(worker).toLocaleString()}
                       </p>
                       <p className="text-xs md:text-sm text-slate-400">
-                        Last Payment: {new Date(worker.lastPayment).toLocaleDateString()}
+                        Last Payment:{" "}
+                        {new Date(worker.lastPayment).toLocaleDateString()}
                       </p>
                       {calculatePendingAmount(worker) > 0 && (
                         <button
@@ -440,7 +504,10 @@ const ProjectManagementPage = () => {
                   {uiConfig.title}
                 </h1>
               </div>
-              <button className="w-full sm:w-auto px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors text-sm md:text-base">
+              <button
+                onClick={() => setShowAddProject(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors text-sm md:text-base"
+              >
                 {uiConfig.buttonTitles.addProject}
               </button>
             </div>
@@ -450,7 +517,9 @@ const ProjectManagementPage = () => {
         {/* Content */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="text-violet-400 text-sm md:text-base">Loading...</div>
+            <div className="text-violet-400 text-sm md:text-base">
+              Loading...
+            </div>
           </div>
         ) : error ? (
           <div className="text-red-400 text-center p-3 md:p-4 bg-red-900 bg-opacity-20 rounded-lg text-sm md:text-base">
@@ -471,8 +540,12 @@ const ProjectManagementPage = () => {
         )}
 
         {/* Modals */}
-        {showWorkerModal && <WorkerFormModal />}
-        {showPaymentModal && <PaymentModal worker={editingWorker} />}
+        {showAddProject && (
+          <AddNewProject
+            onClose={() => setShowAddProject(false)}
+            onSave={handleSaveProject}
+          />
+        )}
       </div>
     </div>
   );
