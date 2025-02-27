@@ -1,20 +1,21 @@
 // src/config/homeConfig.js
 const USD_TO_INR_RATE = 83.5;
 
-export const formatCurrency = (amount, currency = 'USD') => {
-  if (currency === 'INR') {
+export const formatCurrency = (amount, currency = 'INR') => {
+  if (currency === 'INR' || currency === undefined) {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR'
-    }).format(amount * USD_TO_INR_RATE);
+    }).format(amount);
   }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
-  }).format(amount);
+  }).format(amount / USD_TO_INR_RATE);
 };
 
 export const fetchProjectData = async () => {
+  // All monetary values are now in INR by default
   return {
     project: {
       name: 'Smart City Infrastructure',
@@ -25,11 +26,11 @@ export const fetchProjectData = async () => {
         totalDays: 351,
         daysRemaining: 245
       },
-      totalBudget: 5750000,
-      budgetSpent: 2350000,
-      budgetRemaining: 3400000,
+      totalBudget: 480125000, // ₹ (5,750,000 USD * 83.5)
+      budgetSpent: 196225000,  // ₹ (2,350,000 USD * 83.5)
+      budgetRemaining: 283900000, // ₹ (3,400,000 USD * 83.5)
       progressPercentage: 65,
-      profitProjection: 1200000
+      profitProjection: 100200000 // ₹ (1,200,000 USD * 83.5)
     },
     contractor: {
       name: 'Urban Solutions Inc.',
@@ -38,8 +39,8 @@ export const fetchProjectData = async () => {
       phone: '+91 6206761669',
       email: 'example@gmail.com',
       address: '1234 Innovation Ave, Tech City, ST 54321',
-      totalEarnings: 2350000,
-      expectedProfit: 1200000,
+      totalEarnings: 196225000, // ₹ (2,350,000 USD * 83.5)
+      expectedProfit: 100200000, // ₹ (1,200,000 USD * 83.5)
       timeline: { 
         start: '2024-01-15', 
         end: '2024-12-31' 
@@ -60,7 +61,7 @@ export const fetchProjectData = async () => {
         description: 'Develop and upgrade city road infrastructure',
         status: 'In Progress',
         progress: 65,
-        budget: 1500000,
+        budget: 125250000, // ₹ (1,500,000 USD * 83.5)
         startDate: '2024-02-01',
         endDate: '2024-10-30',
         team: ['Michael Johnson', 'Sarah Lee']
@@ -71,7 +72,7 @@ export const fetchProjectData = async () => {
         description: 'Implement AI-driven traffic control systems',
         status: 'Pending',
         progress: 30,
-        budget: 1200000,
+        budget: 100200000, // ₹ (1,200,000 USD * 83.5)
         startDate: '2024-06-15',
         endDate: '2024-11-30',
         team: ['David Chen', 'Emily Wong']
@@ -82,7 +83,7 @@ export const fetchProjectData = async () => {
         description: 'Deploy renewable energy infrastructure',
         status: 'Not Started',
         progress: 10,
-        budget: 2050000,
+        budget: 171175000, // ₹ (2,050,000 USD * 83.5)
         startDate: '2024-09-01',
         endDate: '2025-06-30',
         team: ['Alex Rodriguez', 'Maria Garcia']

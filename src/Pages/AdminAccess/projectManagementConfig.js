@@ -1,6 +1,14 @@
 /* eslint-disable no-unused-vars */
 // projectManagementConfig.js
 
+// Exchange rate for USD to INR conversion
+const USD_TO_INR_RATE = 83.5;
+
+// Function to convert any dollar amount to rupees
+const convertToRupees = (dollarAmount) => {
+  return Math.round(dollarAmount * USD_TO_INR_RATE);
+};
+
 export const uiConfig = {
   title: "Project Management",
   buttonTitles: {
@@ -12,6 +20,7 @@ export const uiConfig = {
     pending: "Pending",
     completed: "Completed",
   },
+  currency: "₹", // Using Indian Rupee symbol
 };
 
 export const projectApi = {
@@ -23,8 +32,8 @@ export const projectApi = {
         id: 1,
         name: "Website Redesign",
         status: "Active",
-        totalBudget: 50000,
-        paidAmount: 20000,
+        totalBudget: convertToRupees(50000), // ₹4,175,000
+        paidAmount: convertToRupees(20000), // ₹1,670,000
         startDate: "2024-01-01",
         endDate: "2024-06-30",
         workers: [
@@ -34,8 +43,8 @@ export const projectApi = {
             email: "john@example.com",
             phone: "123-456-7890",
             role: "Lead Developer",
-            totalAmount: 15000,
-            paidAmount: 10000,
+            totalAmount: convertToRupees(15000), // ₹1,252,500
+            paidAmount: convertToRupees(10000), // ₹835,000
             lastPayment: "2024-01-15",
           },
           {
@@ -44,8 +53,8 @@ export const projectApi = {
             email: "jane@example.com",
             phone: "123-456-7891",
             role: "UI Designer",
-            totalAmount: 12000,
-            paidAmount: 6000,
+            totalAmount: convertToRupees(12000), // ₹1,002,000
+            paidAmount: convertToRupees(6000), // ₹501,000
             lastPayment: "2024-01-20",
           },
         ],
@@ -54,8 +63,8 @@ export const projectApi = {
         id: 2,
         name: "Mobile App Development",
         status: "Pending",
-        totalBudget: 75000,
-        paidAmount: 25000,
+        totalBudget: convertToRupees(75000), // ₹6,262,500
+        paidAmount: convertToRupees(25000), // ₹2,087,500
         startDate: "2024-02-01",
         endDate: "2024-08-31",
         workers: [
@@ -65,8 +74,8 @@ export const projectApi = {
             email: "john@example.com",
             phone: "123-456-7890",
             role: "Lead Developer",
-            totalAmount: 15000,
-            paidAmount: 10000,
+            totalAmount: convertToRupees(15000), // ₹1,252,500
+            paidAmount: convertToRupees(10000), // ₹835,000
             lastPayment: "2024-01-15",
           },
           {
@@ -75,8 +84,8 @@ export const projectApi = {
             email: "jane@example.com",
             phone: "123-456-7891",
             role: "UI Designer",
-            totalAmount: 12000,
-            paidAmount: 6000,
+            totalAmount: convertToRupees(12000), // ₹1,002,000
+            paidAmount: convertToRupees(6000), // ₹501,000
             lastPayment: "2024-01-20",
           },
         ],
@@ -85,8 +94,8 @@ export const projectApi = {
         id: 3,
         name: "E-commerce Platform",
         status: "Active",
-        totalBudget: 100000,
-        paidAmount: 15000,
+        totalBudget: convertToRupees(100000), // ₹8,350,000
+        paidAmount: convertToRupees(15000), // ₹1,252,500
         startDate: "2024-03-01",
         endDate: "2024-12-31",
         workers: [
@@ -96,8 +105,8 @@ export const projectApi = {
             email: "mike@example.com",
             phone: "123-456-7892",
             role: "Backend Developer",
-            totalAmount: 20000,
-            paidAmount: 15000,
+            totalAmount: convertToRupees(20000), // ₹1,670,000
+            paidAmount: convertToRupees(15000), // ₹1,252,500
             lastPayment: "2024-02-28",
           },
         ],
@@ -146,6 +155,7 @@ export const projectApi = {
         id: String(Date.now()),
         paidAmount: 0,
         workers: [],
+        // Convert budget to number (assuming input is already in rupees)
         totalBudget: Number(projectData.totalBudget),
         startDate: new Date(projectData.startDate).toISOString().split("T")[0],
         endDate: new Date(projectData.endDate).toISOString().split("T")[0],
@@ -203,6 +213,8 @@ export const projectApi = {
       const newWorker = {
         id: Date.now(),
         ...workerData,
+        // Ensure totalAmount is stored as a number
+        totalAmount: Number(workerData.totalAmount),
         paidAmount: 0,
         lastPayment: new Date().toISOString().split("T")[0],
       };
@@ -243,4 +255,13 @@ export const projectApi = {
       throw error;
     }
   },
+
+  // Format currency for display
+  formatCurrency: (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(amount);
+  }
 };

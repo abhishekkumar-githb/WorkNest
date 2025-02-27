@@ -1,29 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Phone, Send, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Mail, Send, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 const LoginPage = () => {
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
-  const [stage, setStage] = useState('phone');
+  const [stage, setStage] = useState('email');
   const [isAnimating, setIsAnimating] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (phone.length > 0) {
+    if (email.length > 0) {
       setIsTyping(true);
       const timeout = setTimeout(() => setIsTyping(false), 500);
       return () => clearTimeout(timeout);
     }
-  }, [phone]);
+  }, [email]);
 
-  const handlePhoneChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    if (value.length <= 10) {
-      setPhone(value);
-    }
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
   const handleOtpChange = (e) => {
@@ -33,9 +30,13 @@ const LoginPage = () => {
     }
   };
 
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleSendOTP = () => {
-    if (phone.length !== 10) {
-      toast.error('Please enter a valid phone number');
+    if (!validateEmail(email)) {
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -43,7 +44,7 @@ const LoginPage = () => {
     setTimeout(() => {
       setIsAnimating(false);
       setStage('otp');
-      toast.success('OTP sent successfully!');
+      toast.success('OTP sent successfully to your email!');
     }, 1500);
   };
 
@@ -64,8 +65,8 @@ const LoginPage = () => {
       {/* Dynamic Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800/20 to-slate-900" />
-        <div className="absolute w-[800px] h-[800px] -top-40 -right-40 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute w-[800px] h-[800px] -bottom-40 -left-40 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute w-full h-full -top-40 -right-40 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute w-full h-full -bottom-40 -left-40 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
       <div className="min-h-screen flex items-center justify-center relative">
@@ -78,11 +79,11 @@ const LoginPage = () => {
             </div>
 
             <div className="p-8">
-              {stage === 'phone' ? (
+              {stage === 'email' ? (
                 <div className="space-y-6">
                   <div className="text-center space-y-2">
                     <h2 className="text-2xl font-bold text-slate-200">Welcome Back</h2>
-                    <p className="text-slate-400">Enter your phone number to continue</p>
+                    <p className="text-slate-400">Enter your email address to continue</p>
                   </div>
 
                   <div className="relative group">
@@ -93,17 +94,17 @@ const LoginPage = () => {
                     <div className="relative">
                       <span className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300
                         ${isTyping ? 'text-cyan-300' : 'text-slate-400'}`}>
-                        <Phone size={20} />
+                        <Mail size={20} />
                       </span>
                       <input
-                        type="tel"
-                        value={phone}
-                        onChange={handlePhoneChange}
+                        type="email"
+                        value={email}
+                        onChange={handleEmailChange}
                         className="w-full pl-12 pr-4 py-4 bg-slate-800/90 rounded-lg
                           border border-slate-700 transition-all duration-300
                           text-slate-200 placeholder-slate-500
                           focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
-                        placeholder="Enter your phone number"
+                        placeholder="Enter your email address"
                       />
                     </div>
                   </div>
@@ -122,7 +123,7 @@ const LoginPage = () => {
                 <div className="space-y-6">
                   <div className="text-center space-y-2">
                     <h2 className="text-2xl font-bold text-slate-200">Verify OTP</h2>
-                    <p className="text-slate-400">Enter the 5-digit code sent to {phone}</p>
+                    <p className="text-slate-400">Enter the 5-digit code sent to {email}</p>
                   </div>
 
                   <input
@@ -139,11 +140,11 @@ const LoginPage = () => {
 
                   <div className="flex justify-between text-sm">
                     <button 
-                      onClick={() => setStage('phone')}
+                      onClick={() => setStage('email')}
                       className="text-cyan-300 hover:text-cyan-200 flex items-center gap-1 
                         transition-all duration-300"
                     >
-                      <ArrowLeft size={16} /> Change Number
+                      <ArrowLeft size={16} /> Change Email
                     </button>
                     <button 
                       onClick={handleSendOTP}
@@ -160,7 +161,7 @@ const LoginPage = () => {
                       flex items-center justify-center gap-2"
                   >
                     Verify & Login
-                    <CheckCircle2 size={18} className="animate-spin" />
+                    <CheckCircle2 size={18} className="animate-pulse" />
                   </button>
                 </div>
               )}
